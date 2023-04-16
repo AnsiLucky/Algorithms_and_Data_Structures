@@ -2,45 +2,96 @@ package week3.assigment2.classes;
 
 import week3.assigment2.interfaces.MyList;
 
-public class MyLinkedList implements MyList {
+import java.util.Iterator;
+
+public class MyLinkedList<T> implements MyList<T> {
+    private MyNode head;
+    private MyNode tail;
+    private int size;
+
+    private class MyNode {
+        private final T data;
+        private MyNode next;
+        private MyNode previous;
+
+        public MyNode(T data){
+            this.data = data;
+        }
+    }
+
+    public MyLinkedList(){
+        head = tail = null;
+    }
+
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean contains(Object o) {
+        MyNode temp = head;
+        for (int i = 0; i < size; i++) {
+            if ((T) o == temp.data)
+                return true;
+            temp = temp.next;
+        }
         return false;
     }
 
     @Override
-    public void add(Object item) {
+    public void add(T item) {
+        MyNode newNode = new MyNode(item);
+        if (head == null) {
+            head = tail = newNode;
+        }
+        else{
+            System.out.println(newNode.data);
+            newNode.previous = tail;
+            tail.next = newNode;
+            tail = newNode;
+        }
+        size++;
+    }
+
+    @Override
+    public void add(T item, int index) {
+        // backward
+        if (index > size/2){
+
+        } else{
+            MyNode temp = head;
+            for (int i = 0; i < index; i++){
+
+            }
+        }
 
     }
 
     @Override
-    public void add(Object item, int index) {
-
-    }
-
-    @Override
-    public boolean remove(Object item) {
+    public boolean remove(T item) {
         return false;
     }
 
     @Override
-    public Object remove(int index) {
+    public T remove(int index) {
         return null;
     }
 
     @Override
     public void clear() {
-
+        head = tail = null;
     }
 
     @Override
-    public Object get(int index) {
-        return null;
+    public T get(int index) {
+        if (index >= size)
+            throw new IndexOutOfBoundsException();
+        MyNode temp = head;
+        for (int i = 0; i < index; i++)
+            temp = temp.next;
+
+        return temp.data;
     }
 
     @Override
@@ -56,5 +107,26 @@ public class MyLinkedList implements MyList {
     @Override
     public void sort() {
 
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new MyIterator();
+    }
+
+    private class MyIterator implements Iterator<T> {
+        private MyNode cursor = head;
+
+        @Override
+        public boolean hasNext() {
+            return cursor != null;
+        }
+
+        @Override
+        public T next() {
+            T data = cursor.data;
+            cursor =  cursor.next;
+            return data;
+        }
     }
 }
