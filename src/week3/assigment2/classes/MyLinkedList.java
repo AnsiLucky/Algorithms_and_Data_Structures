@@ -43,65 +43,127 @@ public class MyLinkedList<T> implements MyList<T> {
     public void add(T item) {
         MyNode newNode = new MyNode(item);
         if (head == null) {
-            head = tail = newNode;
+            head = newNode;
         }
         else{
-            System.out.println(newNode.data);
             newNode.previous = tail;
             tail.next = newNode;
-            tail = newNode;
         }
+        tail = newNode;
         size++;
     }
 
     @Override
     public void add(T item, int index) {
-        // backward
-        if (index > size/2){
-
-        } else{
-            MyNode temp = head;
-            for (int i = 0; i < index; i++){
-
-            }
+        if (index < 0 || index > size)
+            throw new IndexOutOfBoundsException();
+        if (index == size) {
+            add(item);
+            return;
         }
-
-    }
+        MyNode newNode = new MyNode(item);
+        if (index == 0){
+            head.previous = newNode;
+            newNode.next = head;
+            head = newNode;
+        }
+        else{
+            MyNode cursor = head;
+            for (int i = 0; i < index; i++)
+                cursor = cursor.next;
+            newNode.next = cursor;
+            newNode.previous = cursor.previous;
+            cursor.previous.next = newNode;
+            cursor.previous = newNode;
+            }
+        size++;
+        }
 
     @Override
     public boolean remove(T item) {
+        MyNode cursor = head;
+        while (cursor != null) {
+            if (cursor.data == item){
+                removeNode(cursor);
+                return true;
+            }
+            cursor = cursor.next;
+        }
         return false;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        if (index < 0 || index >= size)
+            throw new IndexOutOfBoundsException();
+        MyNode cursor = head;
+        for (int i = 0; i < index; i++)
+            cursor = cursor.next;
+        removeNode(cursor);
+        return cursor.data;
+    }
+
+    private void removeNode(MyNode node) {
+        if (node.previous == null) {
+            head = node.next;
+        } else {
+            node.previous.next = node.next;
+        }
+        if (node.next == null) {
+            tail = node.previous;
+        } else {
+            node.next.previous = node.previous;
+        }
+        size--;
     }
 
     @Override
     public void clear() {
         head = tail = null;
+        size = 0;
     }
 
     @Override
     public T get(int index) {
-        if (index >= size)
+        if (index < 0 || index >= size)
             throw new IndexOutOfBoundsException();
-        MyNode temp = head;
-        for (int i = 0; i < index; i++)
-            temp = temp.next;
-
-        return temp.data;
+        MyNode cursor = head;
+        if (index > size / 2){
+            // backward
+            cursor = tail;
+            for (int i = size - 1; i > index; i--)
+                cursor = cursor.previous;
+        }
+        else{
+            //forward
+             for (int i = 0; i < index; i++)
+                 cursor = cursor.next;
+            }
+        return cursor.data;
     }
 
     @Override
     public int indexOf(Object o) {
-        return 0;
+        int index = 0;
+        for (MyNode cursor = head; cursor != null; cursor = cursor.next) {
+            if (o == null ? cursor.data == null : o.equals(cursor.data)) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
     }
 
     @Override
     public int lastIndexOf(Object o) {
-        return 0;
+        int index = size - 1;
+        for (MyNode cursor = tail; cursor != null; cursor = cursor.previous) {
+            if (o == null ? cursor.data == null : o.equals(cursor.data)) {
+                return index;
+            }
+            index--;
+        }
+        return -1;
     }
 
     @Override
