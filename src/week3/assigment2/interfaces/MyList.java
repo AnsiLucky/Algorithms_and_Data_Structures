@@ -1,6 +1,6 @@
 package week3.assigment2.interfaces;
 
-public interface MyList<T> {
+public interface MyList<T> extends Iterable<T> {
     int size();
     boolean contains(Object o);
     void add(T item);

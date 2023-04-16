@@ -10,7 +10,7 @@ public class MyLinkedList<T> implements MyList<T> {
     private int size;
 
     private class MyNode {
-        private final T data;
+        private T data;
         private MyNode next;
         private MyNode previous;
 
@@ -32,7 +32,7 @@ public class MyLinkedList<T> implements MyList<T> {
     public boolean contains(Object o) {
         MyNode temp = head;
         for (int i = 0; i < size; i++) {
-            if ((T) o == temp.data)
+            if (o == temp.data)
                 return true;
             temp = temp.next;
         }
@@ -55,26 +55,44 @@ public class MyLinkedList<T> implements MyList<T> {
 
     @Override
     public void add(T item, int index) {
+        //check index
         if (index < 0 || index > size)
             throw new IndexOutOfBoundsException();
+        //check: item added into end
         if (index == size) {
             add(item);
             return;
         }
+        //create new node with data
         MyNode newNode = new MyNode(item);
+        //check: item added into start
         if (index == 0){
             head.previous = newNode;
             newNode.next = head;
             head = newNode;
         }
+
         else{
-            MyNode cursor = head;
-            for (int i = 0; i < index; i++)
-                cursor = cursor.next;
-            newNode.next = cursor;
-            newNode.previous = cursor.previous;
-            cursor.previous.next = newNode;
-            cursor.previous = newNode;
+                //check: if path faster forward we start from "head"
+                if (index <= size / 2){
+                    MyNode cursor = head;
+                    for (int i = 0; i < index; i++)
+                        cursor = cursor.next;
+                    newNode.next = cursor;
+                    newNode.previous = cursor.previous;
+                    cursor.previous.next = newNode;
+                    cursor.previous = newNode;
+                }
+                //check: if path faster backward we start from "tail"
+                else{
+                    MyNode cursor = tail;
+                    for (int i = size - 1; i > index; i--)
+                        cursor = cursor.previous;
+                    newNode.next = cursor;
+                    newNode.previous = cursor.previous;
+                    cursor.previous.next = newNode;
+                    cursor.previous = newNode;
+                }
             }
         size++;
         }
@@ -168,7 +186,18 @@ public class MyLinkedList<T> implements MyList<T> {
 
     @Override
     public void sort() {
-
+        if (!(head == null || head.data instanceof Comparable))
+            throw new ClassCastException("Elements are not comparable");
+        // sort with bubble sort algorithm
+        for (int i = 0; i < size - 1; i++) {
+            for (MyNode cursor = head; cursor.next != null; cursor = cursor.next) {
+                if (((Comparable<T>) cursor.data).compareTo(cursor.next.data) > 0) {
+                    T tmp = cursor.data;
+                    cursor.data = cursor.next.data;
+                    cursor.next.data = tmp;
+                }
+            }
+        }
     }
 
     @Override

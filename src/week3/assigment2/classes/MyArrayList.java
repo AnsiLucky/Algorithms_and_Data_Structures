@@ -11,21 +11,21 @@ public class MyArrayList<T> implements MyList<T> {
     public MyArrayList() {
         this(5);
     }
-
+    // constructor with parameter for special capacity
     public MyArrayList(int initialCapacity) {
         hiddenArr = new Object[initialCapacity];
     }
 
     private void increaseBuffer() {
-        int newCapacity = capacity * 2;
-        Object[] tempArr = new Object[newCapacity];
+        capacity = capacity * 2;
+        Object[] tempArr = new Object[capacity];
 
-        for (int i = 0; i < capacity; i++)
+        for (int i = 0; i < size; i++)
             tempArr[i] = hiddenArr[i];
 
         hiddenArr = tempArr;
     }
-
+    // swap two Objects in array
     private void swap(Object[] arr, int i, int j){
         Object temp = arr[i];
         arr[i] = arr[j];
@@ -39,7 +39,7 @@ public class MyArrayList<T> implements MyList<T> {
 
     @Override
     public boolean contains(Object o) {
-        return indexOf(o) > 0;
+        return indexOf(o) >= 0;
     }
 
     @Override
@@ -94,7 +94,7 @@ public class MyArrayList<T> implements MyList<T> {
             throw new IndexOutOfBoundsException();
         return (T) hiddenArr[index];
     }
-
+    // indexOf return the first index of given Object, if Object not consist return -1;
     @Override
     public int indexOf(Object o) {
         for (int i = 0; i < size; i++)
@@ -103,7 +103,7 @@ public class MyArrayList<T> implements MyList<T> {
 
         return -1;
     }
-
+    // indexOf return the last index of given Object, if Object not consist return -1;
     @Override
     public int lastIndexOf(Object o) {
         for (int i = size - 1; i > 0; i--)
@@ -112,7 +112,7 @@ public class MyArrayList<T> implements MyList<T> {
 
         return -1;
     }
-
+    // sort with bubble sort algorithm
     @Override
     public void sort() {
         for (int i = 0; i < size - 1; i++)
