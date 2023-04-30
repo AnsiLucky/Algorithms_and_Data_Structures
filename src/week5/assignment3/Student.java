@@ -4,7 +4,7 @@ public class Student {
     private static int static_id = 1;
 
     private String name;
-    private int id;
+    private final int id;
     private double gpa;
 
     public Student(String name, double gpa) {
@@ -45,9 +45,9 @@ public class Student {
     @Override
     public String toString() {
         return "Student {" +
-                "name='" + name + "\'" +
+                "name='" + name + "'" +
                 ", id = " + id +
-                ", gpa = " + gpa +
+                ", gpa = d" + gpa +
                 '}';
     }
 }
