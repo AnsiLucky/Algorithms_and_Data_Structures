@@ -33,7 +33,8 @@ public class Student {
         return gpa;
     }
 
-    public int hashcode() {
+    @Override
+    public int hashCode() {
         char[] s = name.toCharArray();
         int hashName = 0;
         for (int i = 0; i < name.length(); i++)

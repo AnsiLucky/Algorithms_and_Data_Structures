@@ -13,7 +13,7 @@ public class MyHashTable<K, V> {
 
         @Override
         public String toString() {
-            return "{" + key + " " + value + "}";
+            return "{" + key + " : " + value + "}";
         }
     }
 
@@ -31,16 +31,7 @@ public class MyHashTable<K, V> {
     }
 
     private int hash(K key) {
-        int hash = 0;
-        try{
-            char[] keyCharArray = key.toString().toCharArray(); // key convert into string, after into charArray
-            for (char c : keyCharArray)
-                hash += c;
-        } catch (Exception e){
-            hash = Math.abs(key.hashCode());
-        }
-
-        return hash % M;
+        return key.hashCode() % M;
     }
 
     public void put(K key, V value) {
@@ -55,7 +46,7 @@ public class MyHashTable<K, V> {
             hashNode.value = value; // change the value of hashNode
         else{ // if key doesn't exist, add new 'key-value' hashNode
             HashNode<K, V> newHashNode = new HashNode<>(key, value);
-            if (4 * M < N){ // check need we increase number of buckets
+            if (M * 4 < N) { // check need we increase number of buckets
                 increaseBucketsNumber();
                 bucket = hash(key); // assign new hashCode
             }
@@ -66,7 +57,7 @@ public class MyHashTable<K, V> {
     }
 
     private void increaseBucketsNumber() {
-        M =  (int)(M * 0.75); // increase buckets in chainArray
+        M  *= 2; // increase buckets in chainArray
         HashNode<K, V>[] newChainArray = new HashNode[M]; // create new chainArray with new number of buckets
         for (int i = 0; i < chainArray.length; i++){ //traversing throw all buckets in chainArray
             HashNode<K, V> current = chainArray[i]; // make current for keep location of node in chainArray
@@ -134,4 +125,17 @@ public class MyHashTable<K, V> {
         }
         return null;
     }
+
+    public void printNumberOfElementsInEachBucket() {
+        for(int i = 0; i < M; i++) {
+            HashNode<K, V> hashNode = chainArray[i];
+            int numOfElements = 0;
+            while(hashNode != null) {
+                hashNode = hashNode.next;
+                numOfElements++;
+            }
+            System.out.println("Number of elements: " + numOfElements + " in " + i + "bucket");
+        }
+    }
+
 }

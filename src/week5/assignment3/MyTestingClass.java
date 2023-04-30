@@ -1,7 +1,7 @@
 package week5.assignment3;
 
 public class MyTestingClass {
-    // MyTestingClass will include: IIN of Student, ENT score, and University code. It will be like ENT result
+    // MyTestingClass includes: IIN of Student, ENT score, and University code. It will be like ENT result
     private final String iin;
     private final int entScore;
     private int universityCode;
