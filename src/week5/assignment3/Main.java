@@ -2,12 +2,14 @@ package week5.assignment3;
 
 public class Main {
     public static void main(String[] args) {
-        String s = "hello";
-        Integer nine = 9;
-        Integer nini = 9;
-        System.out.println(nine.hashCode());
-        System.out.println(nini.hashCode());
+        MyHashTable<Integer, String> hashTable = new MyHashTable<>();
+        hashTable.put(500, "500");
+        hashTable.put(575, "575");
+        hashTable.put(300, "300");
+        System.out.println(hashTable.get(300));
 
-        System.out.println(s.hashCode());
+        Student student = new Student("Angsar", 3.58);
+        System.out.println(student.getGpa());
+
     }
 }

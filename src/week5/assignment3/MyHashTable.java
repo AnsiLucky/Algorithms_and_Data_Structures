@@ -24,18 +24,23 @@ public class MyHashTable<K, V> {
     public MyHashTable() {
         chainArray = new HashNode[M];
     }
+
     public MyHashTable(int M){
         this.M = M;
         chainArray = new HashNode[M];
     }
 
     private int hash(K key) {
-        char[] keyCharArray = key.toString().toCharArray(); // key convert into string, after into charArray
-        int sum = 0;
-        for (char c : keyCharArray)
-            sum += c;
+        int hash = 0;
+        try{
+            char[] keyCharArray = key.toString().toCharArray(); // key convert into string, after into charArray
+            for (char c : keyCharArray)
+                hash += c;
+        } catch (Exception e){
+            hash = Math.abs(key.hashCode());
+        }
 
-        return sum % M;
+        return hash % M;
     }
 
     public void put(K key, V value) {
@@ -50,7 +55,7 @@ public class MyHashTable<K, V> {
             hashNode.value = value; // change the value of hashNode
         else{ // if key doesn't exist, add new 'key-value' hashNode
             HashNode<K, V> newHashNode = new HashNode<>(key, value);
-            if (4 * M == N){ // check need we increase number of buckets
+            if (4 * M < N){ // check need we increase number of buckets
                 increaseBucketsNumber();
                 bucket = hash(key); // assign new hashCode
             }
@@ -86,6 +91,7 @@ public class MyHashTable<K, V> {
         }
         return null;
     }
+
     public V remove(K key) {
         int bucket = hash(key);
         HashNode<K, V> previousHashNode = chainArray[bucket];
@@ -116,6 +122,7 @@ public class MyHashTable<K, V> {
         }
         return false;
     }
+
     public K getKey(V value) {
         for (int i = 0; i < M; i++) { // traversing all buckets or 'whole chainArray'
             HashNode<K, V> hashNode = chainArray[i];
