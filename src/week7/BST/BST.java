@@ -59,21 +59,21 @@ public class BST<K extends Comparable<K>, V> implements BSTInterface<K, V> {
     }
 
     @Override
-    public KeyVal getMin() {
+    public K getMin() {
         if (isEmpty()) return null;
         Node node = getMin(root);
         KeyVal result = new KeyVal(node.key, node.val);
 
-        return result;
+        return (K) result.key;
     }
 
     @Override
-    public KeyVal getMax() {
+    public K getMax() {
         if (isEmpty()) return null;
         Node node = getMax(root);
         KeyVal result = new KeyVal(node.key, node.val);
 
-        return result;
+        return (K) result.key;
     }
 
     @Override
@@ -157,11 +157,6 @@ public class BST<K extends Comparable<K>, V> implements BSTInterface<K, V> {
         node.size = 1 + size(node.left) + size(node.right);
         return node;
     }
-
-//    private KeyVal traverseInOrder(Node node) {
-//        if (node == null)
-//            return
-//    }
 
     public Iterable<KeyVal<K, V>> iterator() {
         return new Iterable<KeyVal<K, V>>() {

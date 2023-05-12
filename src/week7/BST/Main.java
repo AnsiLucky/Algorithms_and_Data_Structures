@@ -23,7 +23,8 @@ public class Main {
             System.out.println("Key: " + elem.getKey() + ", Value: " + elem.getVal());
         }
 
-        System.out.println("Min Value:" );
+        System.out.println("Min Key:" + bst.getMin());
+        System.out.println("Max Key:" + bst.getMax());
 
 
         System.out.println(bst.size());
