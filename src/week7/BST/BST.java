@@ -3,7 +3,7 @@ package week7.BST;
 import java.util.Iterator;
 import java.util.Stack;
 
-public class BST<K extends Comparable<K>, V> implements BSTInterface<K, V>, Iterable<K> {
+public class BST<K extends Comparable<K>, V> implements BSTInterface<K, V> {
     private Node root;
 
     private class Node {
@@ -78,9 +78,13 @@ public class BST<K extends Comparable<K>, V> implements BSTInterface<K, V>, Iter
 
     @Override
     public int size() {
-        if (root == null)
+        return size(root);
+    }
+
+    private int size(Node node) {
+        if (node == null)
             return 0;
-        return root.size;
+        return node.size;
     }
 
     @Override
@@ -99,7 +103,7 @@ public class BST<K extends Comparable<K>, V> implements BSTInterface<K, V>, Iter
             node.right = put(key, val, node.right);
         else if (key.compareTo(node.key) < 0)
             node.left = put(key, val, node.left);
-        node.size = 1 + node.left.size + node.right.size;
+        node.size = 1 + size(node.left)  + size(node.right);
         return node;
     }
 
@@ -150,7 +154,7 @@ public class BST<K extends Comparable<K>, V> implements BSTInterface<K, V>, Iter
                 node.right = delete(node.key, node.right);
             }
         }
-        node.size = 1 + node.left.size + node.right.size;
+        node.size = 1 + size(node.left) + size(node.right);
         return node;
     }
 
@@ -160,35 +164,40 @@ public class BST<K extends Comparable<K>, V> implements BSTInterface<K, V>, Iter
 //    }
 
     public Iterable<KeyVal<K, V>> iterator() {
-        return () -> new BSTIterator(root);
+        return new Iterable<KeyVal<K, V>>() {
+            @Override
+            public Iterator<KeyVal<K, V>> iterator() {
+                return new BSTIterator(root);
+            }
+        };
 
     }
 
     private class BSTIterator implements Iterator<KeyVal<K, V>> {
-        private Stack<Node> allNodes;
+        private Stack<Node> stack;
         private BSTIterator(Node node) {
-            allNodes = new Stack<>();
-            goLeftUnderCorn(root);
+            stack = new Stack<>();
+            putLeftNodeToStack(root);
         }
 
-        private void goLeftUnderCorn(Node node) {
+        private void putLeftNodeToStack(Node node) {
             while (node != null){
-                allNodes.push(node);
+                stack.push(node);
                 node = node.left;
             }
         }
 
         @Override
         public boolean hasNext() {
-            return !allNodes.isEmpty();
+            return !stack.isEmpty();
         }
 
         @Override
         public KeyVal next() {
-            Node current = allNodes.pop();
+            Node current = stack.pop();
 
             if (current.right != null)
-                goLeftUnderCorn(current.right);
+                putLeftNodeToStack(current.right);
 
             return new KeyVal<K, V>(current.key, current.val);
         }

@@ -1,5 +1,7 @@
 package week7.BST;
 
+import java.util.Iterator;
+
 public class Main {
     public static void main(String[] args) {
         BST<Integer, String> bst = new BST<>();
@@ -18,8 +20,10 @@ public class Main {
         bst.delete(30);
 
         for (var elem : bst.iterator()) {
-            System.out.println("Key: " + elem.getVal() + ", Value: " + elem.getKey());
+            System.out.println("Key: " + elem.getKey() + ", Value: " + elem.getVal());
         }
+
+        System.out.println("Min Value:" );
 
 
         System.out.println(bst.size());
