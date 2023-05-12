@@ -1,8 +1,9 @@
 package week7.BST;
 
-import java.security.Key;
+import java.util.Iterator;
+import java.util.Stack;
 
-public class BST<K extends Comparable<K>, V> implements BSTInterface<K, V> {
+public class BST<K extends Comparable<K>, V> implements BSTInterface<K, V>, Iterable<K> {
     private Node root;
 
     private class Node {
@@ -17,7 +18,7 @@ public class BST<K extends Comparable<K>, V> implements BSTInterface<K, V> {
         }
     }
 
-    public class KeyVal {
+    public class KeyVal<K, V> {
         private K key;
         private V val;
 
@@ -77,6 +78,8 @@ public class BST<K extends Comparable<K>, V> implements BSTInterface<K, V> {
 
     @Override
     public int size() {
+        if (root == null)
+            return 0;
         return root.size;
     }
 
@@ -86,27 +89,24 @@ public class BST<K extends Comparable<K>, V> implements BSTInterface<K, V> {
         if (root == null)
             root = newNode;
         else
-            insert(key, val, root);
+            put(key, val, root);
     }
 
-    private Node insert(K key, V val, Node node) {
+    private Node put(K key, V val, Node node) {
         if (node == null)
             return new Node(key, val);
-        if (key.compareTo(node.key) > 0) {
-            node.right = insert(key, val, node.right);
-            node.size++;
-        }
-        else if (key.compareTo(node.key) < 0) {
-            node.left = insert(key, val, node.left);
-            node.size++;
-        }
+        if (key.compareTo(node.key) > 0)
+            node.right = put(key, val, node.right);
+        else if (key.compareTo(node.key) < 0)
+            node.left = put(key, val, node.left);
+        node.size = 1 + node.left.size + node.right.size;
         return node;
     }
 
     @Override
     public V get(K key) {
         KeyVal result = get(key, root);
-        return result.val;
+        return (V) result.val;
     }
 
     private KeyVal get(K key, Node node) {
@@ -129,14 +129,10 @@ public class BST<K extends Comparable<K>, V> implements BSTInterface<K, V> {
     private Node delete(K key, Node node) {
         if (node == null)
             return null;
-        if (key.compareTo(node.key) > 0) {
+        if (key.compareTo(node.key) > 0)
             node.right = delete(key, node.right);
-            node.size++;
-        }
-        else if (key.compareTo(node.key) < 0) {
+        else if (key.compareTo(node.key) < 0)
             node.left = delete(key, node.left);
-            node.size++;
-        }
         else {
             // when only one child / no child (leaf node)
             if (node.left == null)
@@ -154,16 +150,47 @@ public class BST<K extends Comparable<K>, V> implements BSTInterface<K, V> {
                 node.right = delete(node.key, node.right);
             }
         }
+        node.size = 1 + node.left.size + node.right.size;
         return node;
     }
 
-    private KeyVal traverseInOrder(Node node) {
-        if (node == null)
-            return
+//    private KeyVal traverseInOrder(Node node) {
+//        if (node == null)
+//            return
+//    }
+
+    public Iterable<KeyVal<K, V>> iterator() {
+        return () -> new BSTIterator(root);
+
     }
 
-    @Override
-    public Iterable<K> iterator() {
-        return null;
+    private class BSTIterator implements Iterator<KeyVal<K, V>> {
+        private Stack<Node> allNodes;
+        private BSTIterator(Node node) {
+            allNodes = new Stack<>();
+            goLeftUnderCorn(root);
+        }
+
+        private void goLeftUnderCorn(Node node) {
+            while (node != null){
+                allNodes.push(node);
+                node = node.left;
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            return !allNodes.isEmpty();
+        }
+
+        @Override
+        public KeyVal next() {
+            Node current = allNodes.pop();
+
+            if (current.right != null)
+                goLeftUnderCorn(current.right);
+
+            return new KeyVal<K, V>(current.key, current.val);
+        }
     }
 }
