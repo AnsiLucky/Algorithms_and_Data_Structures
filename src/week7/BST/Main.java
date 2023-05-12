@@ -1,10 +1,9 @@
 package week7.BST;
 
-import java.util.Iterator;
-
 public class Main {
     public static void main(String[] args) {
         BST<Integer, String> bst = new BST<>();
+        System.out.println(bst.isEmpty());
         bst.put(10, "ten");
         bst.put(4, "four");
         bst.put(9, "nine");
@@ -28,5 +27,6 @@ public class Main {
 
 
         System.out.println(bst.size());
+        System.out.println(bst.isEmpty());
     }
 }
